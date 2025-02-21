@@ -43,7 +43,7 @@ export function AppSidebar() {
 
   return (
     <>
-      <Sidebar collapsible="offcanvas" className="bg-background border-r shadow-sm">
+      <Sidebar className="bg-background border-r shadow-sm">
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupLabel className="text-sm px-6 py-2">Navigation</SidebarGroupLabel>
@@ -57,7 +57,7 @@ export function AppSidebar() {
                       tooltip={item.title}
                       className="px-4 py-3"
                     >
-                      <Link to={item.url} onClick={() => toggleSidebar()}>
+                      <Link to={item.url}>
                         <item.icon className="h-5 w-5 mr-3" />
                         <span className="font-medium">{item.title}</span>
                       </Link>
