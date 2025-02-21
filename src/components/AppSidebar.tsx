@@ -16,7 +16,7 @@ import { LayoutDashboard, Settings, Phone, Home, Menu } from "lucide-react";
 
 export function AppSidebar() {
   const location = useLocation();
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar, isMobile, setOpenMobile } = useSidebar();
 
   const menuItems = [
     {
@@ -41,6 +41,12 @@ export function AppSidebar() {
     },
   ];
 
+  const handleClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
+
   return (
     <>
       <Sidebar className="bg-background border-r shadow-sm">
@@ -57,7 +63,7 @@ export function AppSidebar() {
                       tooltip={item.title}
                       className="px-4 py-3"
                     >
-                      <Link to={item.url}>
+                      <Link to={item.url} onClick={handleClick}>
                         <item.icon className="h-5 w-5 mr-3" />
                         <span className="font-medium">{item.title}</span>
                       </Link>
