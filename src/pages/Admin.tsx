@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,7 +6,6 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { Users, FileText, TrendingUp, Calendar } from "lucide-react";
 import { useState } from "react";
 
-// Sample data - In a real application, this would come from your backend
 const quoteStats = {
   daily: 45,
   weekly: 284,
@@ -59,32 +57,26 @@ export default function Admin() {
   const calculateSampleCase = () => {
     let price = formula.basePrice;
     
-    // Young driver multiplier
     if (sampleCase.age < 25) {
       price *= formula.youngDriverMultiplier;
     }
     
-    // Minor incident history
     if (sampleCase.drivingHistory === "minor") {
       price *= formula.minorIncidentMultiplier;
     }
     
-    // Comprehensive coverage
     if (sampleCase.coverageType === "comprehensive") {
       price *= formula.comprehensiveMultiplier;
     }
     
-    // Safety features discount
     price *= (1 - (sampleCase.safetyFeatures * formula.safetyFeatureDiscount));
     
-    // Anti-theft discount
     price *= (1 - (sampleCase.antiTheftDevices * formula.antiTheftDiscount));
     
     return price.toFixed(2);
   };
 
   const handleSave = () => {
-    // In a real application, this would save to a backend
     setIsEditing(false);
     console.log('New formula parameters:', formula);
   };
@@ -93,7 +85,6 @@ export default function Admin() {
     <div className="p-6">
       <h1 className="text-3xl font-semibold mb-6 gradient-text">Admin Dashboard</h1>
       
-      {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Card className="p-6 bg-white/50 backdrop-blur border-t border-white/50 shadow-md">
           <div className="flex items-center space-x-4">
@@ -144,7 +135,6 @@ export default function Admin() {
         </Card>
       </div>
 
-      {/* Formula Management */}
       <Card className="p-6 mb-8">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-lg font-semibold">Insurance Formula Parameters</h3>
@@ -180,7 +170,6 @@ export default function Admin() {
         </div>
       </Card>
 
-      {/* Sample Case Card */}
       <Card className="p-6 mb-8">
         <h3 className="text-lg font-semibold mb-4">Sample Case Calculation</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -205,7 +194,6 @@ export default function Admin() {
         </div>
       </Card>
 
-      {/* Weekly Quotes Chart */}
       <Card className="p-6">
         <h3 className="text-lg font-semibold mb-4">Weekly Quote Requests</h3>
         <div className="h-[300px]">
