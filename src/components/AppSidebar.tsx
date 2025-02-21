@@ -1,6 +1,8 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
-import { LayoutDashboard, Settings, Phone, Home, Menu } from "lucide-react";
+import { LayoutDashboard, Settings, Phone, Home, Menu, UserCircle } from "lucide-react";
+
 export function AppSidebar() {
   const location = useLocation();
   const {
@@ -8,6 +10,7 @@ export function AppSidebar() {
     isMobile,
     setOpenMobile
   } = useSidebar();
+  
   const menuItems = [{
     title: "Home",
     icon: Home,
@@ -21,15 +24,21 @@ export function AppSidebar() {
     icon: Phone,
     url: "/contact"
   }, {
+    title: "My Account",
+    icon: UserCircle,
+    url: "/my-account"
+  }, {
     title: "Settings",
     icon: Settings,
     url: "/settings"
   }];
+
   const handleClick = () => {
     if (isMobile) {
       setOpenMobile(false);
     }
   };
+
   return <>
       <Sidebar className="bg-white border-r shadow-sm [&[data-mobile=true]]:!bg-white">
         <SidebarContent className="bg-zinc-300 hover:bg-zinc-200">

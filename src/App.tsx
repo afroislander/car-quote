@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Admin from "./pages/Admin";
 import Contact from "./pages/Contact";
 import Settings from "./pages/Settings";
+import MyAccount from "./pages/MyAccount";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
                   <Route path="/admin" element={<Admin />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/settings" element={<Settings />} />
+                  <Route path="/my-account" element={<MyAccount />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </div>
