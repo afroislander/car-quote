@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
@@ -8,7 +7,7 @@ import DriverInfo from "./quote-steps/DriverInfo";
 import VehicleInfo from "./quote-steps/VehicleInfo";
 import PolicyInfo from "./quote-steps/PolicyInfo";
 import QuoteSummary from "./quote-steps/QuoteSummary";
-import { ChevronRight, ChevronLeft } from "lucide-react";
+import { ChevronRight, ChevronLeft, Car } from "lucide-react";
 
 export type QuoteData = {
   // Driver Info
@@ -79,10 +78,22 @@ export default function QuoteForm() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-b from-gray-50 to-gray-100">
-      <Card className="w-full max-w-3xl p-6 space-y-6 bg-white/80 backdrop-blur shadow-xl rounded-xl">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      <div className="fixed inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 z-0" />
+      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-blue-200/20 via-transparent to-transparent" />
+      
+      <div className="absolute top-10 left-10 text-blue-400/30 transform -rotate-12">
+        <Car size={120} />
+      </div>
+      <div className="absolute bottom-10 right-10 text-indigo-400/30 transform rotate-12">
+        <Car size={120} />
+      </div>
+
+      <Card className="w-full max-w-3xl p-6 space-y-6 bg-white/90 backdrop-blur shadow-xl rounded-xl relative z-10 border-t border-white/50">
         <div className="space-y-2 text-center">
-          <h2 className="text-3xl font-semibold tracking-tight">Get Your Car Insurance Quote</h2>
+          <h2 className="text-3xl font-semibold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            Get Your Car Insurance Quote
+          </h2>
           <p className="text-muted-foreground">Complete the form below to receive your personalized quote</p>
         </div>
 
@@ -91,7 +102,9 @@ export default function QuoteForm() {
             <span>Step {currentStep + 1} of {steps.length}</span>
             <span>{steps[currentStep]}</span>
           </div>
-          <Progress value={progress} className="h-2" />
+          <Progress value={progress} className="h-2 bg-blue-100">
+            <div className="h-full bg-gradient-to-r from-blue-500 to-indigo-500" style={{ width: `${progress}%` }} />
+          </Progress>
         </div>
 
         <motion.div
@@ -110,6 +123,7 @@ export default function QuoteForm() {
             variant="outline"
             onClick={() => setCurrentStep((prev) => prev - 1)}
             disabled={currentStep === 0}
+            className="border-blue-200 hover:bg-blue-50"
           >
             <ChevronLeft className="mr-2 h-4 w-4" /> Previous
           </Button>
@@ -117,6 +131,7 @@ export default function QuoteForm() {
           <Button
             onClick={() => setCurrentStep((prev) => prev + 1)}
             disabled={currentStep === steps.length - 1}
+            className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white"
           >
             {currentStep === steps.length - 2 ? "Get Quote" : "Next"} <ChevronRight className="ml-2 h-4 w-4" />
           </Button>
