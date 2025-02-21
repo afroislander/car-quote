@@ -12,7 +12,7 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { LayoutDashboard, Settings, Phone, Home } from "lucide-react";
+import { LayoutDashboard, Settings, Phone, Home, Menu } from "lucide-react";
 
 export function AppSidebar() {
   const location = useLocation();
