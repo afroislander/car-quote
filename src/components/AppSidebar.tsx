@@ -43,7 +43,7 @@ export function AppSidebar() {
 
   return (
     <>
-      <Sidebar collapsible="offcanvas">
+      <Sidebar collapsible="offcanvas" className="bg-background border-r">
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupLabel>Navigation</SidebarGroupLabel>
