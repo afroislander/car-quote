@@ -46,19 +46,20 @@ export function AppSidebar() {
       <Sidebar collapsible="offcanvas" className="bg-background border-r shadow-sm">
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel>Navigation</SidebarGroupLabel>
-            <SidebarGroupContent>
+            <SidebarGroupLabel className="text-sm px-6 py-2">Navigation</SidebarGroupLabel>
+            <SidebarGroupContent className="px-3">
               <SidebarMenu>
                 {menuItems.map((item) => (
-                  <SidebarMenuItem key={item.title}>
+                  <SidebarMenuItem key={item.title} className="py-1">
                     <SidebarMenuButton
                       asChild
                       isActive={location.pathname === item.url}
                       tooltip={item.title}
+                      className="px-4 py-3"
                     >
                       <Link to={item.url} onClick={() => toggleSidebar()}>
-                        <item.icon className="h-4 w-4" />
-                        <span>{item.title}</span>
+                        <item.icon className="h-5 w-5 mr-3" />
+                        <span className="font-medium">{item.title}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
