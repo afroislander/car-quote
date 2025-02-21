@@ -9,7 +9,30 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          id: string
+          insurance_amount: number | null
+          insurance_type: Database["public"]["Enums"]["insurance_type"] | null
+          updated_at: string | null
+          username: string | null
+        }
+        Insert: {
+          id: string
+          insurance_amount?: number | null
+          insurance_type?: Database["public"]["Enums"]["insurance_type"] | null
+          updated_at?: string | null
+          username?: string | null
+        }
+        Update: {
+          id?: string
+          insurance_amount?: number | null
+          insurance_type?: Database["public"]["Enums"]["insurance_type"] | null
+          updated_at?: string | null
+          username?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +41,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      insurance_type: "liability" | "collision" | "comprehensive"
     }
     CompositeTypes: {
       [_ in never]: never
