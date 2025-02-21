@@ -24,7 +24,7 @@ export function AppSidebar() {
     icon: LayoutDashboard,
     url: "/admin"
   }, {
-    title: "Contact",
+    title: "Contact Us",
     icon: Phone,
     url: "/contact"
   }, {
