@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
@@ -14,7 +15,7 @@ export type QuoteData = {
   age: string;
   gender: string;
   drivingHistory: string;
-  creditScore: string;
+  policyStartDate: string; // Changed from creditScore
   location: string;
   drivingExperience: string;
   annualMileage: string;
@@ -40,7 +41,7 @@ export default function QuoteForm() {
     age: "",
     gender: "",
     drivingHistory: "",
-    creditScore: "",
+    policyStartDate: "", // Changed from creditScore
     location: "",
     drivingExperience: "",
     annualMileage: "",

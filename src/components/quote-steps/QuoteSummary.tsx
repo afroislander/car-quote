@@ -20,10 +20,6 @@ export default function QuoteSummary({ data }: QuoteSummaryProps) {
     if (data.drivingHistory === "minor") basePrice *= 1.2;
     if (data.drivingHistory === "major") basePrice *= 1.5;
     
-    // Credit score factor
-    if (data.creditScore === "excellent") basePrice *= 0.8;
-    if (data.creditScore === "poor") basePrice *= 1.3;
-    
     // Coverage type factor
     if (data.coverageType === "comprehensive") basePrice *= 1.4;
     if (data.coverageType === "collision") basePrice *= 1.2;
@@ -42,7 +38,7 @@ export default function QuoteSummary({ data }: QuoteSummaryProps) {
       Age: data.age,
       Gender: data.gender,
       "Driving History": data.drivingHistory,
-      "Credit Score": data.creditScore,
+      "Policy Start Date": data.policyStartDate,
       Location: data.location,
     },
     "Vehicle Information": {
