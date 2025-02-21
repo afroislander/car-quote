@@ -10,11 +10,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { LayoutDashboard, Settings, Phone, Home } from "lucide-react";
 
 export function AppSidebar() {
   const location = useLocation();
+  const { toggleSidebar } = useSidebar();
 
   const menuItems = [
     {
@@ -41,7 +43,7 @@ export function AppSidebar() {
 
   return (
     <>
-      <Sidebar>
+      <Sidebar collapsible="offcanvas">
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupLabel>Navigation</SidebarGroupLabel>
@@ -54,7 +56,7 @@ export function AppSidebar() {
                       isActive={location.pathname === item.url}
                       tooltip={item.title}
                     >
-                      <Link to={item.url}>
+                      <Link to={item.url} onClick={() => toggleSidebar()}>
                         <item.icon className="h-4 w-4" />
                         <span>{item.title}</span>
                       </Link>
@@ -66,9 +68,12 @@ export function AppSidebar() {
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>
-      <div className="fixed top-4 left-4 z-50 md:hidden">
-        <SidebarTrigger />
-      </div>
+      <button
+        onClick={toggleSidebar}
+        className="fixed top-4 left-4 z-50 md:hidden rounded-md p-2 bg-background border shadow-sm"
+      >
+        <Menu className="h-4 w-4" />
+      </button>
     </>
   );
 }
