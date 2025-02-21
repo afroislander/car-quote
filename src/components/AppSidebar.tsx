@@ -16,6 +16,10 @@ export function AppSidebar() {
     icon: Home,
     url: "/"
   }, {
+    title: "My Account",
+    icon: UserCircle,
+    url: "/my-account"
+  }, {
     title: "Admin",
     icon: LayoutDashboard,
     url: "/admin"
@@ -23,10 +27,6 @@ export function AppSidebar() {
     title: "Contact",
     icon: Phone,
     url: "/contact"
-  }, {
-    title: "My Account",
-    icon: UserCircle,
-    url: "/my-account"
   }, {
     title: "Settings",
     icon: Settings,
