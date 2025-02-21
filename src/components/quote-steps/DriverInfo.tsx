@@ -53,18 +53,13 @@ export default function DriverInfo({ data, updateData }: DriverInfoProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="creditScore">Credit Score Range</Label>
-          <Select value={data.creditScore} onValueChange={(value) => updateData({ creditScore: value })}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select credit score range" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="excellent">Excellent (750+)</SelectItem>
-              <SelectItem value="good">Good (700-749)</SelectItem>
-              <SelectItem value="fair">Fair (650-699)</SelectItem>
-              <SelectItem value="poor">Poor (Below 650)</SelectItem>
-            </SelectContent>
-          </Select>
+          <Label htmlFor="policyStartDate">Policy Start Date</Label>
+          <Input
+            id="policyStartDate"
+            type="date"
+            value={data.policyStartDate}
+            onChange={(e) => updateData({ policyStartDate: e.target.value })}
+          />
         </div>
 
         <div className="space-y-2">
