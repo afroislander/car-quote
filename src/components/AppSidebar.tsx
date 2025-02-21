@@ -49,7 +49,7 @@ export function AppSidebar() {
 
   return (
     <>
-      <Sidebar className="bg-background border-r shadow-sm">
+      <Sidebar className="bg-background border-r shadow-sm [&[data-mobile=true]]:bg-[#1A1F2C]">
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupLabel className="text-sm px-6 py-2">Navigation</SidebarGroupLabel>
