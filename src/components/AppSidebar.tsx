@@ -49,7 +49,7 @@ export function AppSidebar() {
 
   return (
     <>
-      <Sidebar className="bg-background border-r shadow-sm [&[data-mobile=true]]:!bg-[#1A1F2C] [&[data-mobile=true]]:backdrop-blur-none [&[data-mobile=true]]:!bg-opacity-100">
+      <Sidebar className="bg-background border-r shadow-sm [&[data-mobile=true]]:!bg-[#1A1F2C] [&[data-mobile=true]]:backdrop-blur-none [&[data-mobile=true]]:!bg-opacity-100 [&[data-mobile=true]]:!bg-clip-padding">
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupLabel className="text-sm px-6 py-2">Navigation</SidebarGroupLabel>
