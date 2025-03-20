@@ -82,7 +82,7 @@ export default function QuoteSummary({ data }: QuoteSummaryProps) {
       const quoteAmount = calculateQuote();
       const summaryData = formatSummaryData();
       
-      // Log the payload we're about to send
+      // Create the payload to send to the edge function
       const payload = {
         email: emailAddress,
         quoteAmount,
@@ -94,11 +94,7 @@ export default function QuoteSummary({ data }: QuoteSummaryProps) {
       
       // Send email using Supabase edge function with improved error handling
       const { data: responseData, error } = await supabase.functions.invoke("send-quote-email", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: payload,
+        body: payload
       });
 
       if (error) {

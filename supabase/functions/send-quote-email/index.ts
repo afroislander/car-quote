@@ -1,7 +1,7 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const RESEND_API_KEY = 're_DxP1bVHC_E19HngoCiNeAdEyD9aUUmFur'
+const RESEND_API_KEY = 're_DxP1bVHC_E19HngoCiNeAdEyD9aUUmFur';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -21,23 +21,43 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
   
+  console.log("Request method:", req.method);
+  console.log("Request headers:", JSON.stringify(Object.fromEntries(req.headers.entries())));
+  
   // Add proper error handling for JSON parsing
   let requestData: QuoteSendRequest;
+  
   try {
+    console.log("Beginning to parse request body");
+    
     if (req.body === null) {
       throw new Error("Request body is empty");
     }
-    requestData = await req.json();
+    
+    // Get the request body as text first to diagnose issues
+    const bodyText = await req.text();
+    console.log("Raw request body:", bodyText);
+    
+    if (!bodyText || bodyText.trim() === '') {
+      throw new Error("Request body is empty or whitespace");
+    }
+    
+    try {
+      // Now try to parse it as JSON
+      requestData = JSON.parse(bodyText);
+    } catch (parseError) {
+      console.error("JSON parse error:", parseError);
+      throw new Error(`Failed to parse JSON: ${parseError.message}`);
+    }
     
     // Validate required fields
     if (!requestData.email) {
       throw new Error("Email is required");
     }
     
-    // Log incoming data for debugging
-    console.log("Received request data:", JSON.stringify(requestData));
+    console.log("Successfully parsed request data:", JSON.stringify(requestData));
   } catch (error) {
-    console.error("Error parsing request body:", error);
+    console.error("Error processing request body:", error);
     return new Response(
       JSON.stringify({ 
         success: false, 
