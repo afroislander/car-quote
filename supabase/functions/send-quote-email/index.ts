@@ -104,7 +104,13 @@ serve(async (req) => {
       <p>Best regards,<br>Car Insurance Team</p>
     `;
 
-    // Send email to the customer
+    // IMPORTANT: In Resend's testing mode, you can only send emails to YOUR OWN email
+    // We'll use a fixed email address that you own for testing
+    const testingEmail = "afroisland3r@gmail.com"; // This must be the email you used to sign up for Resend
+    
+    console.log(`NOTE: Using testing email ${testingEmail} instead of ${email} due to Resend testing restrictions`);
+
+    // Send email to the testing email
     const customerResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -113,40 +119,22 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         from: 'onboarding@resend.dev',
-        to: [email],
-        subject: 'Your Car Insurance Quote',
+        to: [testingEmail], // Use the testing email instead of customer email
+        subject: `[TEST] Car Insurance Quote for ${email}`,
         html: emailContent
       }),
     });
     
     const customerEmailResult = await customerResponse.json();
-    console.log("Customer email response:", customerEmailResult);
+    console.log("Email response:", customerEmailResult);
     
-    // Send the same quote to admin email
-    console.log("Sending copy of quote to admin email: edwini.kofi@hotmail.com");
-    const adminResponse = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-      },
-      body: JSON.stringify({
-        from: 'onboarding@resend.dev',
-        to: ['edwini.kofi@hotmail.com'],
-        subject: `[ADMIN COPY] Car Insurance Quote for ${email}`,
-        html: emailContent
-      }),
-    });
-    
-    const adminEmailResult = await adminResponse.json();
-    console.log("Admin email response:", adminEmailResult);
-    
+    // Return success with a note about the testing mode
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: "Quote email sent successfully",
-        customerEmail: customerEmailResult,
-        adminEmail: adminEmailResult
+        message: "Quote email sent successfully (to testing email during development)",
+        note: "In development mode, Resend only allows sending to the email used for signup.",
+        customerEmail: customerEmailResult
       }),
       { 
         status: 200, 

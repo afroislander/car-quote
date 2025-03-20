@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import type { QuoteData } from "../QuoteForm";
 import { motion } from "framer-motion";
-import { Mail } from "lucide-react";
+import { Mail, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface QuoteSummaryProps {
@@ -92,7 +92,7 @@ export default function QuoteSummary({ data }: QuoteSummaryProps) {
       
       console.log("Sending payload:", JSON.stringify(payload));
       
-      // Send email using Supabase edge function with improved error handling
+      // Send email using Supabase edge function
       const { data: responseData, error } = await supabase.functions.invoke("send-quote-email", {
         body: payload
       });
@@ -104,9 +104,11 @@ export default function QuoteSummary({ data }: QuoteSummaryProps) {
 
       console.log("Quote email sent successfully:", responseData);
 
+      // Show a toast with the testing mode notice
       toast({
-        title: "Success!",
-        description: `Quote sent to ${emailAddress}`,
+        title: "Quote Sent (Development Mode)",
+        description: "During development, quotes can only be sent to the developer's email address. In production, this would be sent to your email.",
+        variant: "default",
       });
       
       // Clear email input after successful send
@@ -160,6 +162,13 @@ export default function QuoteSummary({ data }: QuoteSummaryProps) {
             {isSending ? "Sending..." : "Send Quote"}
             <Mail className="ml-2 h-4 w-4" />
           </Button>
+        </div>
+        
+        <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-md flex items-start text-sm text-amber-800">
+          <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0 text-amber-500" />
+          <p>
+            <strong>Development Mode:</strong> During development, emails can only be sent to the developer's email address due to Resend API restrictions.
+          </p>
         </div>
       </motion.div>
 
