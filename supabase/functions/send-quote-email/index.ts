@@ -1,9 +1,11 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
+const RESEND_API_KEY = 're_DxP1bVHC_E19HngoCiNeAdEyD9aUUmFur'
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': '*',
 };
 
 interface QuoteSendRequest {
@@ -18,9 +20,9 @@ serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
-
+  const { email, quoteAmount, quoteDetails, customerName } = (await req.json()) as QuoteSendRequest;
   try {
-    const { email, quoteAmount, quoteDetails, customerName } = await req.json() as QuoteSendRequest;
+    
     
     console.log(`Sending quote to ${email} for $${quoteAmount}`);
     
@@ -50,20 +52,25 @@ serve(async (req) => {
       <p>This quote is valid for 30 days from today. To proceed with this offer or to ask any questions, please contact our customer service team.</p>
       <p>Best regards,<br>Car Insurance Team</p>
     `;
-    
-    // For real implementation, this is where you would send the actual email
-    // await emailService.send({ 
-    //   to: email, 
-    //   bcc: "edwini.kofi@hotmail.com", // Always BCC this email
-    //   subject: "Your Car Insurance Quote", 
-    //   html: emailContent 
-    // });
+
+
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: 'onboarding@resend.dev',
+        to: [email],
+        subject: 'Hello World',
+        html: emailContent
+      }),
+    })
     
     // Also log that we're BCCing the admin
     console.log(`Also BCCing quote to edwini.kofi@hotmail.com`);
     
-    // Simulate email sending delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
     
     return new Response(
       JSON.stringify({ success: true, message: "Quote email sent successfully" }),
