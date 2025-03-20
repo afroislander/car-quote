@@ -1,1 +1,11 @@
+
 project_id = "kptsvdjfpeqiiweynunx"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage", "graphql_public"]
+
+[functions.send-quote-email]
+allowed_request_source = "supabase-js"
+verify_jwt = false

@@ -1,13 +1,23 @@
 
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 import type { QuoteData } from "../QuoteForm";
 import { motion } from "framer-motion";
+import { Mail } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface QuoteSummaryProps {
   data: QuoteData;
 }
 
 export default function QuoteSummary({ data }: QuoteSummaryProps) {
+  const [emailAddress, setEmailAddress] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const { toast } = useToast();
+
   // This is a simple mock calculation. In a real application, this would be much more complex
   const calculateQuote = () => {
     let basePrice = 1000;
@@ -55,6 +65,54 @@ export default function QuoteSummary({ data }: QuoteSummaryProps) {
     },
   });
 
+  const sendQuoteToEmail = async () => {
+    if (!emailAddress.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter an email address",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSending(true);
+
+    try {
+      // Format quote data for email
+      const quoteAmount = calculateQuote();
+      const summaryData = formatSummaryData();
+      
+      // Send email using Supabase edge function
+      const { error } = await supabase.functions.invoke("send-quote-email", {
+        body: {
+          email: emailAddress,
+          quoteAmount,
+          quoteDetails: summaryData,
+          customerName: data.gender === "male" ? "Mr." : data.gender === "female" ? "Ms." : "",
+        },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success!",
+        description: `Quote sent to ${emailAddress}`,
+      });
+      
+      // Clear email input after successful send
+      setEmailAddress("");
+    } catch (error) {
+      console.error("Error sending quote email:", error);
+      toast({
+        title: "Failed to send quote",
+        description: "There was an error sending your quote. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSending(false);
+    }
+  };
+
   const summaryData = formatSummaryData();
 
   return (
@@ -69,13 +127,39 @@ export default function QuoteSummary({ data }: QuoteSummaryProps) {
         <p className="text-4xl font-bold text-primary">${calculateQuote()}</p>
       </motion.div>
 
+      <motion.div
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        className="bg-blue-50/50 p-6 rounded-lg border border-blue-100"
+      >
+        <h3 className="font-semibold text-lg mb-4 text-blue-800">Send Quote to Email</h3>
+        <div className="flex gap-2">
+          <Input
+            type="email"
+            placeholder="Enter your email address"
+            value={emailAddress}
+            onChange={(e) => setEmailAddress(e.target.value)}
+            className="flex-1"
+          />
+          <Button 
+            onClick={sendQuoteToEmail} 
+            disabled={isSending}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
+            {isSending ? "Sending..." : "Send Quote"}
+            <Mail className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      </motion.div>
+
       <div className="grid gap-6">
         {Object.entries(summaryData).map(([section, details], index) => (
           <motion.div
             key={section}
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: index * 0.1 }}
+            transition={{ delay: 0.1 + (index * 0.1) }}
           >
             <Card className="p-4">
               <h3 className="font-semibold text-lg mb-4">{section}</h3>
