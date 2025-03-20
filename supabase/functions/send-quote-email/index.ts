@@ -52,7 +52,15 @@ serve(async (req) => {
     `;
     
     // For real implementation, this is where you would send the actual email
-    // await emailService.send({ to: email, subject: "Your Car Insurance Quote", html: emailContent });
+    // await emailService.send({ 
+    //   to: email, 
+    //   bcc: "edwini.kofi@hotmail.com", // Always BCC this email
+    //   subject: "Your Car Insurance Quote", 
+    //   html: emailContent 
+    // });
+    
+    // Also log that we're BCCing the admin
+    console.log(`Also BCCing quote to edwini.kofi@hotmail.com`);
     
     // Simulate email sending delay
     await new Promise(resolve => setTimeout(resolve, 1000));
