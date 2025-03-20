@@ -5,7 +5,7 @@ const RESEND_API_KEY = 're_DxP1bVHC_E19HngoCiNeAdEyD9aUUmFur'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
 interface QuoteSendRequest {
@@ -20,14 +20,43 @@ serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
-  const { email, quoteAmount, quoteDetails, customerName } = (await req.json()) as QuoteSendRequest;
+  
+  // Add proper error handling for JSON parsing
+  let requestData: QuoteSendRequest;
   try {
+    if (req.body === null) {
+      throw new Error("Request body is empty");
+    }
+    requestData = await req.json();
     
+    // Validate required fields
+    if (!requestData.email) {
+      throw new Error("Email is required");
+    }
     
+    // Log incoming data for debugging
+    console.log("Received request data:", JSON.stringify(requestData));
+  } catch (error) {
+    console.error("Error parsing request body:", error);
+    return new Response(
+      JSON.stringify({ 
+        success: false, 
+        error: "Invalid request format: " + error.message 
+      }),
+      { 
+        status: 400, 
+        headers: { 
+          "Content-Type": "application/json",
+          ...corsHeaders,
+        } 
+      }
+    );
+  }
+
+  const { email, quoteAmount, quoteDetails, customerName } = requestData;
+  
+  try {
     console.log(`Sending quote to ${email} for $${quoteAmount}`);
-    
-    // In a real implementation, you would connect to an email service like Resend, SendGrid, etc.
-    // For this example, we'll just simulate success
     
     // Format the quote details for the email
     let emailContent = `
@@ -40,21 +69,23 @@ serve(async (req) => {
     `;
     
     // Add each section of details
-    Object.entries(quoteDetails).forEach(([section, details]) => {
-      emailContent += `<h4>${section}</h4><ul>`;
-      Object.entries(details).forEach(([key, value]) => {
-        emailContent += `<li><strong>${key}:</strong> ${value}</li>`;
+    if (quoteDetails) {
+      Object.entries(quoteDetails).forEach(([section, details]) => {
+        emailContent += `<h4>${section}</h4><ul>`;
+        Object.entries(details).forEach(([key, value]) => {
+          emailContent += `<li><strong>${key}:</strong> ${value}</li>`;
+        });
+        emailContent += `</ul>`;
       });
-      emailContent += `</ul>`;
-    });
+    }
     
     emailContent += `
       <p>This quote is valid for 30 days from today. To proceed with this offer or to ask any questions, please contact our customer service team.</p>
       <p>Best regards,<br>Car Insurance Team</p>
     `;
 
-
-    const res = await fetch('https://api.resend.com/emails', {
+    // Send email to the customer
+    const customerResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -63,17 +94,40 @@ serve(async (req) => {
       body: JSON.stringify({
         from: 'onboarding@resend.dev',
         to: [email],
-        subject: 'Hello World',
+        subject: 'Your Car Insurance Quote',
         html: emailContent
       }),
-    })
+    });
     
-    // Also log that we're BCCing the admin
-    console.log(`Also BCCing quote to edwini.kofi@hotmail.com`);
+    const customerEmailResult = await customerResponse.json();
+    console.log("Customer email response:", customerEmailResult);
     
+    // Send the same quote to admin email
+    console.log("Sending copy of quote to admin email: edwini.kofi@hotmail.com");
+    const adminResponse = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: 'onboarding@resend.dev',
+        to: ['edwini.kofi@hotmail.com'],
+        subject: `[ADMIN COPY] Car Insurance Quote for ${email}`,
+        html: emailContent
+      }),
+    });
+    
+    const adminEmailResult = await adminResponse.json();
+    console.log("Admin email response:", adminEmailResult);
     
     return new Response(
-      JSON.stringify({ success: true, message: "Quote email sent successfully" }),
+      JSON.stringify({ 
+        success: true, 
+        message: "Quote email sent successfully",
+        customerEmail: customerEmailResult,
+        adminEmail: adminEmailResult
+      }),
       { 
         status: 200, 
         headers: { 
